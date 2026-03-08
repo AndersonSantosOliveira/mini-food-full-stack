@@ -1,0 +1,43 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: meu-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: meubanco
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./minifoodadsuema
+    container_name: minifood-api
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/meubanco
+      SPRING_DATASOURCE_USERNAME: app
+      SPRING_DATASOURCE_PASSWORD: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+
+  frontend:
+    image: node:20-alpine
+    container_name: minifood-front
+    working_dir: /app
+    volumes:
+      - ./frontend/projetojava/minifood:/app
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
