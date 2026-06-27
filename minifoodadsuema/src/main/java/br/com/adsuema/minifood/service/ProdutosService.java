@@ -35,6 +35,7 @@ public class ProdutosService {
         produtosExistentes.setNome(produtos.getNome());
         produtosExistentes.setDescricao(produtos.getDescricao());
         produtosExistentes.setPreco(produtos.getPreco());
+        produtosExistentes.setUrlImagem(produtos.getUrlImagem());
 
         //mudando de restaurante
         if (produtos.getRestaurante() != null) {

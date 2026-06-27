@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PedidosService {
@@ -29,16 +30,18 @@ public class PedidosService {
         // Validar e buscar restaurante
         Long idRestaurante = pedido.getRestaurante().getId();
         Restaurante restaurante = restauranteRepository.findById(idRestaurante)
-                .orElseThrow(() ->new  ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurante do pedido não encontrado"));
 
         // Validar e buscar produtos
         List<Produtos> produtosValidados = pedido.getProdutos().stream()
                 .map(prod -> produtosRepository.findById(prod.getId())
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                "Pedido não encontrado" + prod.getId()))).toList();
+                                "Produto ID " + prod.getId() + " não encontrado")))
+                .collect(Collectors.toList());
 
         pedido.setRestaurante(restaurante);
         pedido.setProdutos(produtosValidados);
+        pedido.calcularValorTotal();
 
         return pedido;
     }

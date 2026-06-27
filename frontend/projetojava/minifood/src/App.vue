@@ -1,98 +1,84 @@
+<script setup>
+import { ref } from 'vue'
+// Importação dos componentes que você já tem na pasta views
+import Produtos from './views/Produtos.vue'
+import Restaurante from './views/Restaurante.vue'
+import PedidosView from './views/PedidosView.vue'
+
+// Estado para controlar qual tela mostrar
+const abaAtiva = ref('pedidos') // Começa na tela de fazer pedidos
+</script>
+
 <template>
-  <div class="layout">
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo">MF</div>
-        <div>
-          <div class="title">MiniFood</div>
-          <div class="subtitle">Painel de Gestão</div>
+  <div class="min-h-screen bg-[#05070a] text-slate-200">
+    
+    <!-- NAVBAR (Usando suas cores e Tailwind v4) -->
+    <nav class="sticky top-0 z-[100] bg-[#05070a]/80 backdrop-blur-xl border-b border-white/5 px-8 py-4">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-10">
+          <h1 class="text-2xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-600 tracking-tighter">
+            MINI-FOOD
+          </h1>
+          
+          <!-- Menu de Navegação -->
+          <div class="hidden md:flex gap-2 bg-white/5 p-1 rounded-2xl border border-white/5">
+            <button 
+              v-for="aba in ['pedidos', 'produtos', 'restaurante']" 
+              :key="aba"
+              @click="abaAtiva = aba"
+              :class="abaAtiva === aba ? 'bg-orange-600 text-white shadow-lg shadow-orange-500/20' : 'text-slate-400 hover:bg-white/5'"
+              class="px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300"
+            >
+              {{ aba }}
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4 text-[10px] font-bold text-slate-500">
+          <span class="px-3 py-1 border border-white/10 rounded-full">SISTEMA ATIVO</span>
+          <button class="hover:text-white transition-colors">SAIR</button>
         </div>
       </div>
+    </nav>
 
-      <nav class="nav">
-        <RouterLink class="link" to="/">Restaurantes</RouterLink>
-        <RouterLink class="link" to="/produtos">Produtos</RouterLink>
-        <RouterLink class="link" to="/pedidos">Pedidos</RouterLink>
-        <RouterLink class="link" to="/about">Sobre</RouterLink>
-      </nav>
-    </header>
+    <!-- ÁREA DE CONTEÚDO COM TRANSIÇÃO SUAVE -->
+    <main class="p-8 max-w-7xl mx-auto">
+      <Transition name="fade" mode="out-in">
+        
+        <!-- Renderização Condicional das Telas -->
+        <div v-if="abaAtiva === 'pedidos'" key="pedidos">
+          <PedidosView />
+        </div>
 
-    <main class="content">
-      <RouterView />
+        <div v-else-if="abaAtiva === 'produtos'" key="produtos">
+          <Produtos />
+        </div>
+
+        <div v-else-if="abaAtiva === 'restaurante'" key="restaurante">
+          <Restaurante />
+        </div>
+
+      </Transition>
     </main>
 
-    <footer class="footer">
-      MiniFood • Vue + Spring Boot + MySQL
+    <!-- RODAPÉ DISCRETO -->
+    <footer class="p-8 text-center border-t border-white/5 opacity-30">
+      <p class="text-[10px] font-bold uppercase tracking-[0.5em]">Gerenciamento Mini-Food © 2026</p>
     </footer>
   </div>
 </template>
 
-<script setup>
-import { RouterLink, RouterView } from "vue-router";
-</script>
-
 <style>
-:root{
-  --bg: #0b0f14;
-  --panel: #111827;
-  --card: #0f172a;
-  --muted: #94a3b8;
-  --text: #e5e7eb;
-  --brand: #22c55e;
-  --brand2: #16a34a;
-  --danger: #ef4444;
-  --border: rgba(255,255,255,.08);
+/* Animação de troca de tela */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
-
-*{ box-sizing: border-box; }
-body{
-  margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: radial-gradient(1200px 600px at 20% -10%, rgba(34,197,94,.18), transparent 60%),
-              radial-gradient(900px 500px at 90% 10%, rgba(59,130,246,.12), transparent 55%),
-              var(--bg);
-  color: var(--text);
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
 }
-
-.layout{ min-height: 100vh; display:flex; flex-direction:column; }
-
-.topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(17, 24, 39, .75);
-  backdrop-filter: blur(10px);
-  position: sticky;
-  top: 0;
-  z-index: 10;
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
-
-.brand{ display:flex; gap:12px; align-items:center; }
-.logo{
-  width:40px;height:40px;border-radius:12px;
-  display:grid;place-items:center;
-  background: linear-gradient(135deg, var(--brand), var(--brand2));
-  font-weight:800;
-}
-.title{ font-weight:800; letter-spacing:.3px; }
-.subtitle{ font-size:12px; color: var(--muted); margin-top:2px; }
-
-.nav{ display:flex; gap:10px; flex-wrap:wrap; }
-.link{
-  text-decoration:none;
-  color: var(--text);
-  font-weight:600;
-  padding: 8px 10px;
-  border-radius: 12px;
-  border: 1px solid transparent;
-}
-.link.router-link-active{
-  border-color: rgba(34,197,94,.35);
-  background: rgba(34,197,94,.12);
-}
-
-.content{ width: min(1100px, 92vw); margin: 18px auto; flex:1; }
-.footer{ border-top: 1px solid var(--border); padding: 14px 18px; color: var(--muted); text-align:center; }
 </style>

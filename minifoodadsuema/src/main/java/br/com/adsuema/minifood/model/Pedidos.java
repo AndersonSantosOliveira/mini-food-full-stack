@@ -1,8 +1,10 @@
 package br.com.adsuema.minifood.model;
 
+import br.com.adsuema.minifood.dto.PedidoRequestDto;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tabelapedidos")
@@ -26,18 +28,54 @@ public class Pedidos {
     @Column(name = "customer")
     private String customer;
 
+    private Double valorTotal;
+
+    public Pedidos(PedidoRequestDto pedidos) {
+        this.customer = pedidos.customer();
+        this.restaurante = new Restaurante();
+        this.restaurante.setId(pedidos.restaurante().id());
+
+        if (pedidos.produtos() != null) {
+            this.produtos = pedidos.produtos().stream()
+                    .map(prod -> {
+                        Produtos p = new Produtos();
+                        p.setId(prod.id());
+                        return p;
+                    }).collect(Collectors.toList());
+        }
+    }
+
+
     //criando construtores
     public Pedidos() {
     }
 
     public Pedidos(Long id, List<Produtos> produtos, Restaurante
-            restaurante, String customer) {
+            restaurante, String customer, Double valorTotal) {
         this.id = id;
         this.produtos = produtos;
         this.restaurante = restaurante;
         this.customer = customer;
+        this.valorTotal = valorTotal;
     }
     //criando geteres e seteres
+
+    @Column(name = "valor_total")
+    public double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
+    public void calcularValorTotal() {
+        if (this.produtos != null && !this.produtos.isEmpty()) {
+            this.valorTotal = this.produtos.stream().mapToDouble(Produtos::getPreco).sum();
+        } else {
+            this.valorTotal = 0.0;
+        }
+    }
 
     public long getId() {
         return id;
@@ -69,15 +107,5 @@ public class Pedidos {
 
     public void setCustomer(String customer) {
         this.customer = customer;
-    }
-
-    @Override
-    public String toString() {
-        return "Pedidos{" +
-                "id=" + id +
-                ", produtos=" + produtos +
-                ", restaurante=" + restaurante +
-                ", customer='" + customer + '\'' +
-                '}';
     }
 }

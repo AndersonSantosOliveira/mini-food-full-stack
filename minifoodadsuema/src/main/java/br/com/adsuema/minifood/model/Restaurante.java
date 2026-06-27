@@ -1,7 +1,11 @@
 package br.com.adsuema.minifood.model;
 
+import br.com.adsuema.minifood.dto.RestauranteRequestDto;
+import br.com.adsuema.minifood.dto.RestauranteResponse;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 
 @Entity
 @Table(name = "tablerestaurant")
@@ -11,6 +15,7 @@ public class Restaurante {
     @Column(name = "id")
     private Long id;
 
+    @NotBlank
     @Column(name = "nome")
     private String nome;
 
@@ -19,11 +24,23 @@ public class Restaurante {
 
     @Column(name = "email")
     @Email
+    @NotBlank
     private String email;
+
+    private Double latitude;
+    private Double longitude;
+    private String address;
+    private Integer deliveryRadiusKm = 10;
+    private String openTime = "08:00";
+    private String closeTime = "22:00";
 
     //construtores
 
-
+    public Restaurante(RestauranteRequestDto restaurante){
+        this.nome = restaurante.nome();
+        this.tipoComidas = restaurante.tipoComidas();
+        this.email = restaurante.email();
+    }
     public Restaurante() {
 
     }
@@ -37,7 +54,7 @@ public class Restaurante {
 
     //geteres e seteres
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -68,15 +85,52 @@ public class Restaurante {
     public void setEmail(String email) {
         this.email = email;
     }
-    // criando to string
 
-    @Override
-    public String toString() {
-        return "Restaurante{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", tipoComidas='" + tipoComidas + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Integer getDeliveryRadiusKm() {
+        return deliveryRadiusKm;
+    }
+
+    public void setDeliveryRadiusKm(Integer deliveryRadiusKm) {
+        this.deliveryRadiusKm = deliveryRadiusKm;
+    }
+
+    public String getOpenTime() {
+        return openTime;
+    }
+
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime;
+    }
+
+    public String getCloseTime() {
+        return closeTime;
+    }
+
+    public void setCloseTime(String closeTime) {
+        this.closeTime = closeTime;
     }
 }

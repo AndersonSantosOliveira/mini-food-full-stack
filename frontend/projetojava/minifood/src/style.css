@@ -1,0 +1,57 @@
+/* 1. Nova Importação Universal do Tailwind v4 */
+@import "tailwindcss";
+
+/* 2. Configurações de Tema e Variáveis Globais */
+:root {
+  background-color: #0b0f1a; 
+  color: #f3f4f6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 3. Reset e Estilo do Body */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* 4. No Tailwind v4, usamos @theme ou apenas CSS padrão para classes extras */
+@layer components {
+  /* Efeito de Vidro (Glassmorphism) para os Cards de Pratos */
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-xl;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .glass-card:hover {
+    @apply border-orange-500/50; /* Mudei para laranja para combinar com seu MINI-FOOD */
+    transform: translateY(-5px);
+  }
+
+  /* Botão de Pedido Estilizado */
+  .btn-order {
+    @apply bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-6 rounded-full transition-all duration-300 shadow-lg shadow-orange-500/20;
+  }
+}
+
+/* 5. Customização da Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #16171d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2e303a;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f97316; /* Laranja do Tailwind */
+}

@@ -2,8 +2,10 @@ package br.com.adsuema.minifood;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
+@EnableAsync
 public class MinifoodApplication {
 
 	public static void main(String[] args) {
