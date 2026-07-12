@@ -1,4 +1,4 @@
-package br.com.adsuema.minifood.dto;
+package br.com.adsuema.minifood.dto.restaurantedto;
 
 public record RestauranteRequestDto(
         String nome,

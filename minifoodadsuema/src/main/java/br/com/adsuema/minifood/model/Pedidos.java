@@ -1,6 +1,6 @@
 package br.com.adsuema.minifood.model;
 
-import br.com.adsuema.minifood.dto.PedidoRequestDto;
+import br.com.adsuema.minifood.dto.dtopedido.PedidoRequestDto;
 import jakarta.persistence.*;
 
 import java.util.List;

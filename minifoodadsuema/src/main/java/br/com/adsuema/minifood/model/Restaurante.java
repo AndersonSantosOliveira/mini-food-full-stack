@@ -1,7 +1,6 @@
 package br.com.adsuema.minifood.model;
 
-import br.com.adsuema.minifood.dto.RestauranteRequestDto;
-import br.com.adsuema.minifood.dto.RestauranteResponse;
+import br.com.adsuema.minifood.dto.restaurantedto.RestauranteRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,13 +25,6 @@ public class Restaurante {
     @Email
     @NotBlank
     private String email;
-
-    private Double latitude;
-    private Double longitude;
-    private String address;
-    private Integer deliveryRadiusKm = 10;
-    private String openTime = "08:00";
-    private String closeTime = "22:00";
 
     //construtores
 
@@ -84,53 +76,5 @@ public class Restaurante {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Integer getDeliveryRadiusKm() {
-        return deliveryRadiusKm;
-    }
-
-    public void setDeliveryRadiusKm(Integer deliveryRadiusKm) {
-        this.deliveryRadiusKm = deliveryRadiusKm;
-    }
-
-    public String getOpenTime() {
-        return openTime;
-    }
-
-    public void setOpenTime(String openTime) {
-        this.openTime = openTime;
-    }
-
-    public String getCloseTime() {
-        return closeTime;
-    }
-
-    public void setCloseTime(String closeTime) {
-        this.closeTime = closeTime;
     }
 }

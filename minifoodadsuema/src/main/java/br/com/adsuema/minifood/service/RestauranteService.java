@@ -4,6 +4,8 @@ import br.com.adsuema.minifood.model.Restaurante;
 import br.com.adsuema.minifood.repository.RestauranteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,8 +37,8 @@ public class RestauranteService {
     }
 
     //  metodo que lista todos os restaurantes.
-    public List<Restaurante> listarTodosRestaurante() {
-        return restauranteRepository.findAll();
+    public Page<Restaurante> listarTodosRestaurante(Pageable pageable) {
+        return restauranteRepository.findAll(pageable);
     }
 
     //  metodo que faz a busca de um restaurante pelo id do mesmo.

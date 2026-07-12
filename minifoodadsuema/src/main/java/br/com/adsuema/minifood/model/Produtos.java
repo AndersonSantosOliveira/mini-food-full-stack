@@ -1,6 +1,6 @@
 package br.com.adsuema.minifood.model;
 
-import br.com.adsuema.minifood.dto.ProdutoRequestDto;
+import br.com.adsuema.minifood.dto.produtodto.ProdutoRequestDto;
 import jakarta.persistence.*;
 
 @Entity

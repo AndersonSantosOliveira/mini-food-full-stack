@@ -1,5 +1,6 @@
-package br.com.adsuema.minifood.dto;
+package br.com.adsuema.minifood.dto.dtopedido;
 
+import br.com.adsuema.minifood.dto.produtodto.ProdutoResponseDto;
 import br.com.adsuema.minifood.model.Pedidos;
 import java.util.List;
 

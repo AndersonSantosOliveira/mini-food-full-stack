@@ -7,6 +7,8 @@ import br.com.adsuema.minifood.repository.PedidosRepository;
 import br.com.adsuema.minifood.repository.ProdutosRepository;
 import br.com.adsuema.minifood.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 public class PedidosService {
     @Autowired
     private PedidosRepository pedidosRepository;
+
+
 
     @Autowired
     private RestauranteRepository restauranteRepository;
@@ -71,8 +75,8 @@ public class PedidosService {
     }
 
     // Listar todos pedidos
-    public List<Pedidos> listarPedidos() {
-        return pedidosRepository.findAll();
+    public Page<Pedidos> listarPedidos(Pageable pageable) {
+        return pedidosRepository.findAll(pageable);
     }
 
     // Buscar pedido por id

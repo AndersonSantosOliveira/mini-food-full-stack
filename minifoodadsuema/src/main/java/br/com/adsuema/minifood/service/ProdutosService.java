@@ -5,6 +5,8 @@ import br.com.adsuema.minifood.model.Restaurante;
 import br.com.adsuema.minifood.repository.ProdutosRepository;
 import br.com.adsuema.minifood.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -48,8 +50,8 @@ public class ProdutosService {
     }
 
     //metodo de listar Produtos
-    public List<Produtos> listarProdutos(){
-        return produtosRepository.findAll();
+    public Page<Produtos> listarProdutos(Pageable pageable){
+        return produtosRepository.findAll(pageable);
     }
 
     //metodo de buscar Produtos

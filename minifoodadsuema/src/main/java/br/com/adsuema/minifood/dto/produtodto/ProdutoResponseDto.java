@@ -1,4 +1,4 @@
-package br.com.adsuema.minifood.dto;
+package br.com.adsuema.minifood.dto.produtodto;
 
 import br.com.adsuema.minifood.model.Produtos;
 
