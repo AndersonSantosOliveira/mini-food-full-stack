@@ -5,6 +5,7 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:app}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
@@ -13,4 +14,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
+server:
+  error:
+    include-message: always

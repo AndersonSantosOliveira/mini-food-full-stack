@@ -10,21 +10,26 @@ public class Produtos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String nome;
 
-    @Column(name = "descricao")
+    @Column(name = "descricao", nullable = false)
     private String descricao;
 
+    @Column(nullable = false)
     private Double preco;
 
+    @Column(nullable = false)
     private String urlImagem;
 
+    @Column(nullable = false)
     private String category;
 
+    @Column(nullable = false)
     private boolean available = true;
 
     @ManyToOne
-    @JoinColumn(name = "restaurante_id")
+    @JoinColumn(name = "restaurante_id", nullable = false)
     private Restaurante restaurante;
 
     public Produtos(ProdutoRequestDto produtos) {

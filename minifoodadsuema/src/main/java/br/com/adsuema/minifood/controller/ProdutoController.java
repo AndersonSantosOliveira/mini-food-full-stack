@@ -6,6 +6,7 @@ import br.com.adsuema.minifood.dto.produtodto.dadosDetalhamentoProduto;
 import br.com.adsuema.minifood.model.Produtos;
 import br.com.adsuema.minifood.service.ProdutosService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +43,7 @@ public class ProdutoController {
     //criando um produto
     @Transactional
     @PostMapping
-    public ResponseEntity criarProduto(@RequestBody ProdutoRequestDto produtos, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity criarProduto(@RequestBody @Valid ProdutoRequestDto produtos, UriComponentsBuilder uriBuilder) {
         Produtos produto = produtosService.criarProdutos(new Produtos(produtos));
         var uri = uriBuilder.path("/produtos/{id}").buildAndExpand(produto.getId()).toUri();
 
@@ -52,7 +53,7 @@ public class ProdutoController {
     //atualizando produto
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<dadosDetalhamentoProduto> atualizarProduto(@RequestBody ProdutoRequestDto produtos, @PathVariable Long id) {
+    public ResponseEntity<dadosDetalhamentoProduto> atualizarProduto(@RequestBody @Valid ProdutoRequestDto produtos, @PathVariable Long id) {
         Produtos atualizado = produtosService.atualizarProdutos(new Produtos(produtos), id);
         return ResponseEntity.ok(new dadosDetalhamentoProduto(atualizado));
     }

@@ -5,6 +5,7 @@ import br.com.adsuema.minifood.dto.restaurantedto.RestauranteResponse;
 import br.com.adsuema.minifood.model.Restaurante;
 import br.com.adsuema.minifood.service.RestauranteService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +41,7 @@ public class RestauranteController {
     @PostMapping
     @Transactional
     public ResponseEntity<RestauranteResponse> criarRestaurante
-    (@RequestBody RestauranteRequestDto restaurante, UriComponentsBuilder uriBuilder) {
+    (@RequestBody @Valid RestauranteRequestDto restaurante, UriComponentsBuilder uriBuilder) {
         Restaurante restaurante1 = restauranteService.criarRestaurante(new Restaurante(restaurante));
         var builder = uriBuilder.path("/restaurante/{id}").buildAndExpand(restaurante1.getId()).toUri();
 
@@ -50,7 +51,7 @@ public class RestauranteController {
     //metodo que atualiza um restaurante existente
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<RestauranteResponse> atualizarRestaurante(@PathVariable Long id, @RequestBody RestauranteRequestDto restaurante) {
+    public ResponseEntity<RestauranteResponse> atualizarRestaurante(@PathVariable Long id, @RequestBody @Valid RestauranteRequestDto restaurante) {
         Restaurante atualizado = restauranteService.atualizarRestaurante(id, new Restaurante(restaurante));
         return ResponseEntity.ok(new RestauranteResponse(atualizado));
     }

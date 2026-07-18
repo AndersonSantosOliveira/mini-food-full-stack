@@ -5,6 +5,7 @@ import br.com.adsuema.minifood.dto.dtopedido.PedidoResponseDto;
 import br.com.adsuema.minifood.model.Pedidos;
 import br.com.adsuema.minifood.service.PedidosService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +39,7 @@ public class PedidoController {
     //criando um pedido
     @Transactional
     @PostMapping()
-    public ResponseEntity<PedidoResponseDto> criarPedido(@RequestBody PedidoRequestDto pedidos, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<PedidoResponseDto> criarPedido(@RequestBody @Valid PedidoRequestDto pedidos, UriComponentsBuilder uriBuilder){
         Pedidos pedido = pedidosService.criarPedido(new Pedidos(pedidos));
 
         var uri = uriBuilder.path("/pedido/{id}").buildAndExpand(pedido.getId()).toUri();
@@ -49,7 +50,7 @@ public class PedidoController {
     //atualizando Pedido
     @Transactional
     @PutMapping("/{id}")
-    public ResponseEntity atualizarPedido(@PathVariable Long id, @RequestBody PedidoRequestDto pedidos){
+    public ResponseEntity atualizarPedido(@PathVariable Long id, @RequestBody @Valid PedidoRequestDto pedidos){
       Pedidos pedido = pedidosService.atualizarPedido(id, new Pedidos(pedidos));
       return ResponseEntity.ok(new PedidoResponseDto(pedido));
     }

@@ -2,7 +2,6 @@ package br.com.adsuema.minifood.model;
 
 import br.com.adsuema.minifood.dto.restaurantedto.RestauranteRequestDto;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 
@@ -14,16 +13,14 @@ public class Restaurante {
     @Column(name = "id")
     private Long id;
 
-    @NotBlank
-    @Column(name = "nome")
+
+    @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(name = "tiposcomidas")
+    @Column(name = "tiposcomidas", nullable = false)
     private String tipoComidas;
 
-    @Column(name = "email")
-    @Email
-    @NotBlank
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     //construtores

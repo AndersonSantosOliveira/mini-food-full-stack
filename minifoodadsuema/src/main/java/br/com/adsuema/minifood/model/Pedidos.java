@@ -22,12 +22,13 @@ public class Pedidos {
     private List<Produtos> produtos;
 
     @ManyToOne
-    @JoinColumn(name = "restaurante_id")
+    @JoinColumn(name = "restaurante_id", nullable = false)
     private Restaurante restaurante;
 
-    @Column(name = "customer")
+    @Column(name = "customer", nullable = false)
     private String customer;
 
+    @Column(nullable = false)
     private Double valorTotal;
 
     public Pedidos(PedidoRequestDto pedidos) {
