@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar ou Cadastrar - Fogo & Brasa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #d97706; --bg-main: #0a0807; --bg-card: #14110f; --text-main: #f5f5f4; --text-muted: #a8a29e; --border-color: #292524; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); padding-top: 90px; display: flex; flex-direction: column; min-height: 100vh; }
+        header { background: var(--bg-card); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 5%; position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; color: var(--text-main); }
+        .logo span { color: var(--primary); }
+        nav ul { display: flex; list-style: none; gap: 2rem; }
+        nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        nav a:hover, nav a.active { color: var(--primary); }
+        .auth-container { max-width: 450px; margin: 3rem auto; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 2.5rem; width: 90%; }
+        h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 1.5rem; text-align: center; }
+        .form-group { margin-bottom: 1.2rem; }
+        label { display: block; font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--text-muted); }
+        input { width: 100%; padding: 0.8rem; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 1rem; }
+        input:focus { outline: none; border-color: var(--primary); }
+        .btn-submit { background: var(--primary); color: white; border: none; width: 100%; padding: 0.9rem; border-radius: 8px; font-weight: 700; margin-top: 1rem; cursor: pointer; }
+        .toggle-links { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted); }
+        .toggle-links a { color: var(--primary); text-decoration: none; font-weight: 600; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo"><i class="fa-solid fa-fire-flame-curved" style="color: var(--primary);"></i> FOGO & <span>BRASA</span></div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="cardapio.html">Cardápio</a></li>
+                <li><a href="sobre.html">Sobre Nós</a></li>
+                <li><a href="cliente.html" class="active">Entrar / Cadastrar</a></li>
+                <li><a href="admin-produtos.html">Painel Lojista</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="auth-container">
+        <!-- FORMULÁRIO DE LOGIN -->
+        <div id="loginFormContainer">
+            <h2>Fazer Login</h2>
+            <form onsubmit="realizarLogin(event)">
+                <div class="form-group">
+                    <label>E-mail (Login)</label>
+                    <input type="email" id="loginEmail" required placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="loginSenha" required placeholder="********">
+                </div>
+                <button type="submit" class="btn-submit">Entrar</button>
+            </form>
+            <div class="toggle-links">
+                Não tem uma conta? <a onclick="alternarFormulario('register')">Cadastre-se</a>
+            </div>
+        </div>
+
+        <!-- FORMULÁRIO DE CADASTRO -->
+        <div id="registerFormContainer" style="display: none;">
+            <h2>Criar Conta</h2>
+            <form onsubmit="realizarCadastro(event)">
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="regNome" required placeholder="Seu Nome">
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="regEmail" required placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Telefone</label>
+                    <input type="text" id="regTelefone" required placeholder="(98) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="regSenha" required placeholder="********">
+                </div>
+                <button type="submit" class="btn-submit">Cadastrar e Entrar</button>
+            </form>
+            <div class="toggle-links">
+                Já tem uma conta? <a onclick="alternarFormulario('login')">Faça login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080';
+
+        function alternarFormulario(tipo) {
+            if (tipo === 'register') {
+                document.getElementById('loginFormContainer').style.display = 'none';
+                document.getElementById('registerFormContainer').style.display = 'block';
+            } else {
+                document.getElementById('registerFormContainer').style.display = 'none';
+                document.getElementById('loginFormContainer').style.display = 'block';
+            }
+        }
+
+        // Rota /login (Sem alertas travando a tela)
+        async function realizarLogin(event) {
+            event.preventDefault();
+            const login = document.getElementById('loginEmail').value;
+            const senha = document.getElementById('loginSenha').value;
+
+            try {
+                const res = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ login, senha })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    localStorage.setItem('tokenJWT', data.token || data.tokenJwt);
+                    // Redireciona imediatamente sem exibir alert()
+                    window.location.href = 'cardapio.html';
+                } else {
+                    alert("E-mail ou senha incorretos.");
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Erro ao conectar com o servidor.");
+            }
+        }
+
+        // Rota /register (Sem alertas travando a tela)
+        async function realizarCadastro(event) {
+            event.preventDefault();
+            const nome = document.getElementById('regNome').value;
+            const email = document.getElementById('regEmail').value;
+            const telefone = document.getElementById('regTelefone').value;
+            const senha = document.getElementById('regSenha').value;
+
+            try {
+                const res = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, email, telefone, senha })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    localStorage.setItem('tokenJWT', data.tokenJWT);
+                    // Redireciona imediatamente sem exibir alert()
+                    window.location.href = 'cardapio.html';
+                } else {
+                    alert("Erro ao cadastrar. E-mail ou telefone já podem estar em uso.");
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Erro ao conectar com o servidor.");
+            }
+        }
+    </script>
+</body>
+</html>

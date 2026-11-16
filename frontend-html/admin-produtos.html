@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Lojista - Gestão de Produtos - Fogo & Brasa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-fire-flame-curved" style="color: var(--primary);"></i> FOGO & <span>BRASA</span>
+        </div>
+      <nav>
+    <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="cardapio.html">Cardápio</a></li>
+        <li><a href="sobre.html">Sobre Nós</a></li>
+        <li><a href="cliente.html">Criar Conta</a></li>
+        <li><a href="admin-produtos.html">Painel Lojista</a></li>
+    </ul>
+</nav>
+    </header>
+
+    <!-- FORMULÁRIO DE CADASTRO DE PRODUTOS -->
+    <div style="max-width: 600px; margin: 120px auto 50px auto; background: var(--bg-card); border: 1px solid var(--border-color); padding: 2.5rem; border-radius: 20px;">
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 0.5rem; text-align: center; color: var(--text-main);">Painel do Lojista</h2>
+        <p style="color: var(--text-muted); text-align: center; margin-bottom: 2rem; font-size: 0.9rem;">Cadastre novos cortes e acompanhamentos no cardápio</p>
+        <p style="text-align: center; margin-bottom: 1.5rem; font-size: 0.9rem;">
+            <a href="admin-pedidos.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Ver pedidos recebidos &rarr;</a>
+        </p>
+        
+        <form id="formProduto">
+            <div style="margin-bottom: 1.2rem;">
+                <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:0.5rem;">Restaurante</label>
+                <select id="restauranteProduto" class="form-control" style="width:100%; background:var(--bg-deep); border:1px solid var(--border-color); padding:0.8rem; border-radius:10px; color:#fff;" required>
+                    <option value="">Carregando restaurantes...</option>
+                </select>
+            </div>
+            <div style="margin-bottom: 1.2rem;">
+                <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:0.5rem;">Nome do Produto</label>
+                <input type="text" id="nomeProduto" class="form-control" style="width:100%; background:var(--bg-deep); border:1px solid var(--border-color); padding:0.8rem; border-radius:10px; color:#fff;" required>
+            </div>
+            <div style="margin-bottom: 1.2rem;">
+                <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:0.5rem;">Descrição</label>
+                <textarea id="descricaoProduto" class="form-control" style="width:100%; background:var(--bg-deep); border:1px solid var(--border-color); padding:0.8rem; border-radius:10px; color:#fff; height: 80px;" required></textarea>
+            </div>
+            <div style="margin-bottom: 1.2rem;">
+                <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:0.5rem;">Preço (R$)</label>
+                <input type="number" step="0.01" id="precoProduto" class="form-control" style="width:100%; background:var(--bg-deep); border:1px solid var(--border-color); padding:0.8rem; border-radius:10px; color:#fff;" required>
+            </div>
+            <div style="margin-bottom: 1.2rem;">
+                <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:0.5rem;">Categoria</label>
+                <select id="categoriaProduto" class="form-control" style="width:100%; background:var(--bg-deep); border:1px solid var(--border-color); padding:0.8rem; border-radius:10px; color:#fff;">
+                    <option value="Carnes">Cortes Nobres (Carnes)</option>
+                    <option value="Acompanhamentos">Acompanhamentos</option>
+                    <option value="Bebidas">Bebidas</option>
+                </select>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:0.5rem;">URL da Imagem</label>
+                <input type="url" id="imagemProduto" class="form-control" style="width:100%; background:var(--bg-deep); border:1px solid var(--border-color); padding:0.8rem; border-radius:10px; color:#fff;" placeholder="https://images.unsplash.com/..." required>
+            </div>
+            <button type="submit" style="width:100%; background:var(--primary); color:#fff; border:none; padding:0.9rem; border-radius:10px; font-weight:600; cursor:pointer;">Cadastrar Produto no Banco</button>
+        </form>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080';
+
+        // Chave do localStorage onde o login (cliente.html) guarda o token JWT.
+        const TOKEN_KEY = 'tokenJWT';
+
+        // Carrega os restaurantes no select (GET /restaurante é público)
+        async function carregarRestaurantes() {
+            const select = document.getElementById('restauranteProduto');
+            try {
+                const res = await fetch(`${API_URL}/restaurante`);
+                if (!res.ok) throw new Error('Status ' + res.status);
+                const dados = await res.json();
+                // A API pagina: a lista vem em "content". Aceita array puro também.
+                const lista = Array.isArray(dados) ? dados : (dados.content || []);
+
+                if (lista.length === 0) {
+                    select.innerHTML = '<option value="">Nenhum restaurante cadastrado</option>';
+                    return;
+                }
+                select.innerHTML = '<option value="">Selecione o restaurante</option>' +
+                    lista.map(r => `<option value="${r.id}">${r.nome}</option>`).join('');
+            } catch (err) {
+                console.error('Erro ao carregar restaurantes:', err);
+                select.innerHTML = '<option value="">Erro ao carregar restaurantes</option>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarRestaurantes);
+
+        document.getElementById('formProduto').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const token = localStorage.getItem(TOKEN_KEY);
+            if (!token) {
+                alert('Acesso restrito! Faça login como administrador antes de cadastrar produtos.');
+                return;
+            }
+
+            const payload = {
+                nome: document.getElementById('nomeProduto').value,
+                descricao: document.getElementById('descricaoProduto').value,
+                preco: Number(document.getElementById('precoProduto').value),
+                category: document.getElementById('categoriaProduto').value,
+                urlImagem: document.getElementById('imagemProduto').value,
+                restauranteId: Number(document.getElementById('restauranteProduto').value)
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/produtos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    alert('Produto cadastrado com sucesso e já visível no cardápio!');
+                    document.getElementById('formProduto').reset();
+                } else {
+                    const detalhe = await res.text();
+                    console.error('Erro da API:', res.status, detalhe);
+                    alert('Erro ' + res.status + ' ao cadastrar produto.\n' + detalhe);
+                }
+            } catch (err) {
+                alert('Erro de conexão com o servidor Spring Boot.');
+            }
+        });
+    </script>
+</body>
+</html>

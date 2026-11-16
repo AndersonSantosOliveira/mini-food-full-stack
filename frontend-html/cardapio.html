@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio - Fogo & Brasa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #d97706; --bg-main: #0a0807; --bg-card: #14110f; --text-main: #f5f5f4; --text-muted: #a8a29e; --border-color: #292524; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); padding-top: 90px; }
+        header { background: var(--bg-card); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 5%; position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; color: var(--text-main); }
+        .logo span { color: var(--primary); }
+        nav ul { display: flex; list-style: none; gap: 2rem; }
+        nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        nav a:hover, nav a.active { color: var(--primary); }
+        .cart-btn { background: none; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; position: relative; }
+        .cart-badge { background: var(--primary); color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem; font-weight: 700; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 5%; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 2rem; }
+        .grid-produtos { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+        .card img { width: 100%; height: 180px; object-fit: cover; }
+        .card-body { padding: 1.2rem; display: flex; flex-direction: column; flex: 1; }
+        .card-body h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .card-body p { color: var(--text-muted); font-size: 0.9rem; flex: 1; margin-bottom: 1rem; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .price { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
+        .btn-add { background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        /* Carrinho Lateral */
+        .cart-drawer { position: fixed; top: 0; right: -400px; width: 380px; height: 100%; background: var(--bg-card); border-left: 1px solid var(--border-color); z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; padding: 2rem; }
+        .cart-drawer.active { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1rem; }
+        .close-cart { background: none; border: none; color: var(--text-main); font-size: 1.5rem; cursor: pointer; }
+        .cart-items { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; }
+        .cart-total { border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 1rem; display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; }
+        .btn-checkout { background: var(--primary); color: white; border: none; width: 100%; padding: 0.9rem; border-radius: 8px; font-weight: 700; margin-top: 1rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo"><i class="fa-solid fa-fire-flame-curved" style="color: var(--primary);"></i> FOGO & <span>BRASA</span></div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="cardapio.html" class="active">Cardápio</a></li>
+                <li><a href="sobre.html">Sobre Nós</a></li>
+                <li><a href="cliente.html">Entrar / Cadastrar</a></li>
+                <li><a href="admin-produtos.html">Painel Lojista</a></li>
+            </ul>
+        </nav>
+        <button class="cart-btn" onclick="toggleCart()"><i class="fa-solid fa-cart-shopping"></i> Sacola <span class="cart-badge" id="cartCount">0</span></button>
+    </header>
+
+    <div class="container">
+        <h1>Nosso Cardápio</h1>
+        <div class="grid-produtos" id="produtosGrid">
+            <p style="color: var(--text-muted);">Carregando produtos do servidor...</p>
+        </div>
+    </div>
+
+    <!-- Carrinho Gaveta -->
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h3>Sua Sacola</h3>
+            <button class="close-cart" onclick="toggleCart()">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItemsList">
+            <p style="color: var(--text-muted); text-align: center; margin-top: 2rem;">Sua sacola está vazia.</p>
+        </div>
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="cartTotalValue" style="color: var(--primary);">R$ 0,00</span>
+        </div>
+        <button class="btn-checkout" onclick="enviarPedido()">Finalizar Pedido</button>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080';
+        let cart = [];
+
+        async function carregarCardapio() {
+            try {
+                const res = await fetch(`${API_URL}/produtos`);
+                const data = await res.json();
+                const produtos = data.content || data; // Trata se vier paginado ou lista pura
+                
+                const grid = document.getElementById('produtosGrid');
+                if (produtos.length === 0) {
+                    grid.innerHTML = '<p style="color: var(--text-muted);">Nenhum produto cadastrado no momento.</p>';
+                    return;
+                }
+
+                grid.innerHTML = produtos.map(p => `
+                    <div class="card">
+                        <img src="${p.urlImagem || 'https://images.unsplash.com/photo-1544025162-d76694265947'}" alt="${p.nome}">
+                        <div class="card-body">
+                            <h3>${p.nome}</h3>
+                            <p>${p.descricao || 'Delicioso prato preparado na brasa.'}</p>
+                            <div class="card-footer">
+                                <span class="price">R$ ${Number(p.preco).toFixed(2)}</span>
+                                <button class="btn-add" onclick='addToCart(${JSON.stringify(p)})'>Adicionar</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                console.error(e);
+                document.getElementById('produtosGrid').innerHTML = '<p style="color: #ef4444;">Erro ao conectar com o servidor Spring Boot.</p>';
+            }
+        }
+
+        function toggleCart() {
+            document.getElementById('cartDrawer').classList.toggle('active');
+        }
+
+        function addToCart(produto) {
+            const itemExistente = cart.find(i => i.id === produto.id);
+            if (itemExistente) {
+                itemExistente.quantidade++;
+            } else {
+                cart.push({ ...produto, quantidade: 1 });
+            }
+            updateCartUI();
+            toggleCart();
+        }
+
+        function updateCartUI() {
+            const countEl = document.getElementById('cartCount');
+            const listEl = document.getElementById('cartItemsList');
+            const totalEl = document.getElementById('cartTotalValue');
+
+            countEl.textContent = cart.reduce((acc, i) => acc + i.quantidade, 0);
+
+            if (cart.length === 0) {
+                listEl.innerHTML = '<p style="color: var(--text-muted); text-align: center; margin-top: 2rem;">Sua sacola está vazia.</p>';
+                totalEl.textContent = 'R$ 0,00';
+                return;
+            }
+
+            let total = 0;
+            listEl.innerHTML = cart.map(i => {
+                total += i.preco * i.quantidade;
+                return `
+                    <div class="cart-item">
+                        <div>
+                            <strong>${i.nome}</strong><br>
+                            <small style="color: var(--text-muted);">${i.quantidade}x R$ ${Number(i.preco).toFixed(2)}</small>
+                        </div>
+                        <span style="color: var(--primary); font-weight: 700;">R$ ${(i.preco * i.quantidade).toFixed(2)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            totalEl.textContent = `R$ ${total.toFixed(2)}`;
+        }
+
+        // ENVIO DO PEDIDO ENVIANDO O TOKEN JWT NO CABEÇALHO
+        async function enviarPedido() {
+            const token = localStorage.getItem('tokenJWT');
+
+            if (!token) {
+                alert("Você precisa estar logado para realizar um pedido!");
+                window.location.href = 'cliente.html';
+                return;
+            }
+
+            if (cart.length === 0) {
+                alert("Sua sacola está vazia!");
+                return;
+            }
+
+            const produtosPayload = [];
+            cart.forEach(item => {
+                for (let i = 0; i < item.quantidade; i++) {
+                    produtosPayload.push({ id: item.id });
+                }
+            });
+
+            const payload = {
+                restaurante: { id: 1 },
+                produtos: produtosPayload
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/pedido`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` // <--- O TOKEN JWT SEGUE AQUI!
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    const pedido = await res.json();
+                    alert(`Pedido #${pedido.id || 'sucesso'} realizado com sucesso!`);
+                    cart = [];
+                    updateCartUI();
+                    toggleCart();
+                } else if (res.status === 401 || res.status === 403) {
+                    alert("Sua sessão expirou. Faça login novamente.");
+                    localStorage.removeItem('tokenJWT');
+                    window.location.href = 'cliente.html';
+                } else {
+                    alert("Erro ao enviar pedido. Verifique os dados.");
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Erro de conexão com o servidor.");
+            }
+        }
+
+        carregarCardapio();
+    </script>
+</body>
+</html>

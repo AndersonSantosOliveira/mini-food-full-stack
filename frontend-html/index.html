@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Início - Fogo & Brasa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary: #d97706; 
+            --bg-main: #0a0807; 
+            --bg-card: #14110f; 
+            --text-main: #f5f5f4; 
+            --text-muted: #a8a29e; 
+            --border-color: #292524; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        
+        header { background: var(--bg-card); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 5%; position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; color: var(--text-main); }
+        .logo span { color: var(--primary); }
+        
+        nav ul { display: flex; list-style: none; gap: 2rem; }
+        nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        nav a:hover, nav a.active { color: var(--primary); }
+
+        /* SEÇÃO HERO PROFISSIONAL E AJUSTADA */
+        .hero { 
+            min-height: 85vh; 
+            margin-top: 80px; /* Compensa o header fixo */
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            padding: 4rem 5%; 
+            background: linear-gradient(to bottom, rgba(10,8,7,0.75), rgba(10,8,7,0.95)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1600') no-repeat center center; 
+            background-size: cover;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .hero span.badge {
+            background: rgba(217, 119, 6, 0.15); 
+            color: var(--primary); 
+            padding: 6px 16px; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            margin-bottom: 1.5rem; 
+            border: 1px solid rgba(217, 119, 6, 0.3);
+            display: inline-block;
+        }
+
+        .hero h1 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 3.2rem; 
+            line-height: 1.2;
+            margin-bottom: 1rem; 
+            max-width: 800px;
+        }
+
+        .hero h1 span { color: var(--primary); }
+
+        .hero p { 
+            color: var(--text-muted); 
+            font-size: 1.15rem; 
+            max-width: 650px; 
+            margin-bottom: 2.5rem; 
+            line-height: 1.6;
+        }
+
+        .btn { 
+            background: var(--primary); 
+            color: white; 
+            padding: 0.9rem 2.2rem; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            box-shadow: 0 4px 20px rgba(217, 119, 6, 0.4); 
+            transition: all 0.2s ease; 
+            display: inline-block; 
+        }
+        .btn:hover { transform: translateY(-2px); background: #b45309; }
+
+        footer { background: var(--bg-card); border-top: 1px solid var(--border-color); text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.85rem; margin-top: auto; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo"><i class="fa-solid fa-fire-flame-curved" style="color: var(--primary);"></i> FOGO & <span>BRASA</span></div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Início</a></li>
+                <li><a href="cardapio.html">Cardápio</a></li>
+                <li><a href="sobre.html">Sobre Nós</a></li>
+                <li><a href="cliente.html">Entrar / Cadastrar</a></li>
+                <li><a href="admin-produtos.html">Painel Lojista</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <span class="badge">Steakhouse & Delivery</span>
+        <h1>O Verdadeiro Sabor do Churrasco na <span>Brasa</span></h1>
+        <p>Cortes nobres selecionados, assados na parrilla e entregues direto na sua casa em Axixá com total suculência.</p>
+        <a href="cardapio.html" class="btn">Explorar Cardápio</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Fogo & Brasa Steakhouse - Axixá/MA. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>
