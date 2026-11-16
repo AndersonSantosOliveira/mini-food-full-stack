@@ -1,14 +1,13 @@
 package br.com.adsuema.minifood.model;
 
-import br.com.adsuema.minifood.dto.dtopedido.PedidoRequestDto;
 import jakarta.persistence.*;
-
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tabelapedidos")
 public class Pedidos {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,64 +20,39 @@ public class Pedidos {
     )
     private List<Produtos> produtos;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurante_id", nullable = false)
     private Restaurante restaurante;
 
-    @Column(name = "customer", nullable = false)
-    private String customer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Cliente cliente;
 
-    @Column(nullable = false)
+    @Column(name = "valor_total", nullable = false)
     private Double valorTotal;
 
-    public Pedidos(PedidoRequestDto pedidos) {
-        this.customer = pedidos.customer();
-        this.restaurante = new Restaurante();
-        this.restaurante.setId(pedidos.restaurante().id());
-
-        if (pedidos.produtos() != null) {
-            this.produtos = pedidos.produtos().stream()
-                    .map(prod -> {
-                        Produtos p = new Produtos();
-                        p.setId(prod.id());
-                        return p;
-                    }).collect(Collectors.toList());
-        }
-    }
-
-
-    //criando construtores
     public Pedidos() {
     }
 
-    public Pedidos(Long id, List<Produtos> produtos, Restaurante
-            restaurante, String customer, Double valorTotal) {
+    public Pedidos(Long id, List<Produtos> produtos, Restaurante restaurante, Cliente cliente, Double valorTotal) {
         this.id = id;
         this.produtos = produtos;
         this.restaurante = restaurante;
-        this.customer = customer;
-        this.valorTotal = valorTotal;
-    }
-    //criando geteres e seteres
-
-    @Column(name = "valor_total")
-    public double getValorTotal() {
-        return valorTotal;
-    }
-
-    public void setValorTotal(double valorTotal) {
+        this.cliente = cliente;
         this.valorTotal = valorTotal;
     }
 
     public void calcularValorTotal() {
         if (this.produtos != null && !this.produtos.isEmpty()) {
-            this.valorTotal = this.produtos.stream().mapToDouble(Produtos::getPreco).sum();
+            this.valorTotal = this.produtos.stream()
+                    .mapToDouble(prod -> prod.getPreco() != null ? prod.getPreco() : 0.0)
+                    .sum();
         } else {
             this.valorTotal = 0.0;
         }
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -102,11 +76,32 @@ public class Pedidos {
         this.restaurante = restaurante;
     }
 
-    public String getCustomer() {
-        return customer;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setCustomer(String customer) {
-        this.customer = customer;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pedidos pedidos = (Pedidos) o;
+        return id != null && Objects.equals(id, pedidos.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

@@ -13,13 +13,16 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
+                registry.addMapping("/**") // Aplica para todas as rotas da API (/produtos, /cliente, /pedido, /restaurante)
                         .allowedOrigins(
-                                "http://localhost:5173",
-                                "http://127.0.0.1:5173"
+                                "http://localhost:5500",
+                                "http://127.0.0.1:5500",
+                                "http://localhost:80",   // Caso suba no Docker via Nginx padrão
+                                "http://localhost:8080"
                         )
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*");
+                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }

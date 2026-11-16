@@ -2,7 +2,7 @@ package br.com.adsuema.minifood.controller;
 
 import br.com.adsuema.minifood.dto.produtodto.ProdutoRequestDto;
 import br.com.adsuema.minifood.dto.produtodto.ProdutoResponseDto;
-import br.com.adsuema.minifood.dto.produtodto.dadosDetalhamentoProduto;
+import br.com.adsuema.minifood.dto.produtodto.DadosDetalhamentoProduto;
 import br.com.adsuema.minifood.model.Produtos;
 import br.com.adsuema.minifood.service.ProdutosService;
 import jakarta.transaction.Transactional;
@@ -15,9 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
-
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
@@ -43,24 +40,24 @@ public class ProdutoController {
     //criando um produto
     @Transactional
     @PostMapping
-    public ResponseEntity criarProduto(@RequestBody @Valid ProdutoRequestDto produtos, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<ProdutoResponseDto> criarProduto(@RequestBody @Valid ProdutoRequestDto produtos, UriComponentsBuilder uriBuilder) {
         Produtos produto = produtosService.criarProdutos(new Produtos(produtos));
         var uri = uriBuilder.path("/produtos/{id}").buildAndExpand(produto.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(new dadosDetalhamentoProduto(produto));
+        return ResponseEntity.created(uri).body(new ProdutoResponseDto(produto));
     }
 
     //atualizando produto
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<dadosDetalhamentoProduto> atualizarProduto(@RequestBody @Valid ProdutoRequestDto produtos, @PathVariable Long id) {
-        Produtos atualizado = produtosService.atualizarProdutos(new Produtos(produtos), id);
-        return ResponseEntity.ok(new dadosDetalhamentoProduto(atualizado));
+    public ResponseEntity<DadosDetalhamentoProduto> atualizarProduto(@RequestBody @Valid ProdutoRequestDto produtos, @PathVariable Long id) {
+        Produtos atualizado = produtosService.atualizarProdutos(produtos, id);
+        return ResponseEntity.ok(new DadosDetalhamentoProduto(atualizado));
     }
 
     @Transactional
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity deletarProdutoId(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarProdutoId(@PathVariable Long id) {
         produtosService.deletarProdutoId(id);
         return ResponseEntity.noContent().build();
     }

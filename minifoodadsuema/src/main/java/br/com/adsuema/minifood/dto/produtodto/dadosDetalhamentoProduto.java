@@ -3,7 +3,7 @@ package br.com.adsuema.minifood.dto.produtodto;
 import br.com.adsuema.minifood.model.Produtos;
 import br.com.adsuema.minifood.model.Restaurante;
 
-public record dadosDetalhamentoProduto(
+public record DadosDetalhamentoProduto(
         String nome,
         String Descricao,
         Double preco,
@@ -11,7 +11,7 @@ public record dadosDetalhamentoProduto(
         String category,
         Restaurante restaurante
 ) {
-    public dadosDetalhamentoProduto(Produtos produtos){
+    public DadosDetalhamentoProduto(Produtos produtos){
         this(
                produtos.getNome(),
                produtos.getDescricao(),

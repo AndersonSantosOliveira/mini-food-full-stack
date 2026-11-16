@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/restaurante")
 public class RestauranteController {
@@ -31,7 +30,7 @@ public class RestauranteController {
 
     //metodo que faz busca de um restaurante por um id especifico
     @GetMapping("/{id}")
-    public ResponseEntity buscarRestauranteId(@PathVariable Long id) {
+    public ResponseEntity<RestauranteResponse> buscarRestauranteId(@PathVariable Long id) {
         Restaurante restaurante = restauranteService.buscarRestaurantePorId(id);
         var valueRestaurante = new RestauranteResponse(restaurante);
         return ResponseEntity.ok(valueRestaurante);
@@ -59,7 +58,7 @@ public class RestauranteController {
     //metodo que deleta um restaurante pelo id
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity deletarRestauranteId(@PathVariable Long id) {
+    public ResponseEntity<Void> deletarRestauranteId(@PathVariable Long id) {
         restauranteService.deletarRestauranteId(id);
         return ResponseEntity.noContent().build();
     }

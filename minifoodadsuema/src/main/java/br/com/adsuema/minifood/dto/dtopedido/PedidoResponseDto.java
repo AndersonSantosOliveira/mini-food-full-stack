@@ -1,12 +1,14 @@
 package br.com.adsuema.minifood.dto.dtopedido;
 
+import br.com.adsuema.minifood.dto.clientedto.ClienteResponseDto;
 import br.com.adsuema.minifood.dto.produtodto.ProdutoResponseDto;
+import br.com.adsuema.minifood.model.Cliente;
 import br.com.adsuema.minifood.model.Pedidos;
 import java.util.List;
 
 public record PedidoResponseDto(
         Long id,
-        String customer,
+        ClienteResponseDto cliente,
         Double valorTotal,
         Long restauranteId,
         List<ProdutoResponseDto> produtos
@@ -15,7 +17,7 @@ public record PedidoResponseDto(
     public PedidoResponseDto(Pedidos pedidos) {
         this(
                 pedidos.getId(),
-                pedidos.getCustomer(),
+                new ClienteResponseDto(pedidos.getCliente()),
                 pedidos.getValorTotal(),
                 pedidos.getRestaurante().getId(),
                 pedidos.getProdutos().stream()

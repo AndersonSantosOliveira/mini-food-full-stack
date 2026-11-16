@@ -1,5 +1,6 @@
 package br.com.adsuema.minifood.service;
 
+import br.com.adsuema.minifood.dto.produtodto.ProdutoRequestDto;
 import br.com.adsuema.minifood.model.Produtos;
 import br.com.adsuema.minifood.model.Restaurante;
 import br.com.adsuema.minifood.repository.ProdutosRepository;
@@ -31,17 +32,17 @@ public class ProdutosService {
     }
 
     //Metodo de atualizar Produtos
-    public Produtos atualizarProdutos(Produtos produtos, Long idProdutos) {
+    public Produtos atualizarProdutos(ProdutoRequestDto produtos, Long idProdutos) {
         Produtos produtosExistentes = produtosRepository.findById(idProdutos)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
-        produtosExistentes.setNome(produtos.getNome());
-        produtosExistentes.setDescricao(produtos.getDescricao());
-        produtosExistentes.setPreco(produtos.getPreco());
-        produtosExistentes.setUrlImagem(produtos.getUrlImagem());
+        produtosExistentes.setNome(produtos.nome());
+        produtosExistentes.setDescricao(produtos.descricao());
+        produtosExistentes.setPreco(produtos.preco());
+        produtosExistentes.setUrlImagem(produtos.urlImagem());
 
         //mudando de restaurante
-        if (produtos.getRestaurante() != null) {
-            Long id = produtos.getRestaurante().getId();
+        if (produtos.restauranteId() != null) {
+            Long id = produtos.restauranteId();
             Restaurante restaurante = restauranteRepository.
                     findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurante não encontrado"));
             produtosExistentes.setRestaurante(restaurante);
@@ -67,4 +68,6 @@ public class ProdutosService {
         }
         produtosRepository.deleteById(id);
     }
+
+
 }
